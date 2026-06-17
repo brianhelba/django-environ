@@ -604,7 +604,8 @@ class Env:
                     not isinstance(default, NoValue) and not callable(default):
                 cast = type(default)
 
-        value = None if default is None and value == '' else value
+        if value == '' and default is None:
+            return None
 
         if value != default or (parse_default and value is not None):
             value = self.parse_value(value, cast)
