@@ -23,7 +23,7 @@ import shlex
 import sys
 import warnings
 from collections.abc import MutableMapping
-from typing import Dict, IO, List, Optional, Tuple, TypeAlias, Union
+from typing import Any, Dict, IO, List, Optional, Tuple, TypeAlias, Union
 from urllib.parse import (
     parse_qs,
     ParseResult,
@@ -733,7 +733,7 @@ class Env:
             except ValueError:
                 url = _urlparse_quote(url)
 
-        config = {}
+        config: Dict[str, Any] = {}
 
         # handle unexpected URL schemes with special characters
         if not url.path:
@@ -763,7 +763,7 @@ class Env:
         db_netloc = unquote(user_host[-1])
         if url.scheme in cls.POSTGRES_FAMILY and ',' in db_netloc:
             # Parsing postgres cluster dsn
-            host_parts = []
+            host_parts: List[Tuple[_str, _str]] = []
             for host in db_netloc.split(','):
                 if host.startswith('['):
                     end = host.find(']')
@@ -1027,8 +1027,8 @@ class Env:
 
     @classmethod
     def _parse_common_search_params(cls, url):
-        cfg = {}
-        prs = {}
+        cfg: Dict[str, Any] = {}
+        prs: Dict[str, List[str]] = {}
 
         if not url.query or str(url.query) == '':
             return cfg, prs
@@ -1045,7 +1045,7 @@ class Env:
 
     @classmethod
     def _parse_elasticsearch_search_params(cls, url, path, secure, params):
-        cfg = {}
+        cfg: Dict[str, Any] = {}
         split = path.rsplit('/', 1)
 
         if len(split) > 1:
@@ -1067,7 +1067,7 @@ class Env:
 
     @classmethod
     def _parse_solr_search_params(cls, url, path, params):
-        cfg = {}
+        cfg: Dict[str, Any] = {}
         cfg['URL'] = urlunparse(('http',) + url[1:2] + (path,) + ('', '', ''))
         if 'TIMEOUT' in params:
             cfg['TIMEOUT'] = cls.parse_value(params['TIMEOUT'][0], int)
@@ -1077,7 +1077,7 @@ class Env:
 
     @classmethod
     def _parse_whoosh_search_params(cls, params):
-        cfg = {}
+        cfg: Dict[str, Any] = {}
         if 'STORAGE' in params:
             cfg['STORAGE'] = params['STORAGE'][0]
         if 'POST_LIMIT' in params:
@@ -1086,7 +1086,7 @@ class Env:
 
     @classmethod
     def _parse_xapian_search_params(cls, params):
-        cfg = {}
+        cfg: Dict[str, Any] = {}
         if 'FLAGS' in params:
             cfg['FLAGS'] = params['FLAGS'][0]
         return cfg
@@ -1102,7 +1102,7 @@ class Env:
         :return: Parsed search URL.
         :rtype: dict
         """
-        config = {}
+        config: Dict[str, Any] = {}
         url = urlparse(url) if not isinstance(url, cls.URL_CLASS) else url
 
         # Remove query strings.
