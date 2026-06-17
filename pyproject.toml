@@ -3,7 +3,7 @@ files = [
   "environ",
   "tests",
 ]
-#check_untyped_defs = true
+check_untyped_defs = true
 show_error_codes = true
 #strict = true
 warn_redundant_casts = true
