@@ -772,9 +772,9 @@ class Env:
                     else:
                         host_parts.append((host, ''))
                 else:
-                    hparts = host.rsplit(':', 1)
-                    if len(hparts) == 2 and hparts[1].isdigit():
-                        host_parts.append(tuple(hparts))
+                    host_left, _, host_right = host.rpartition(':')
+                    if host_left and host_right.isdigit():
+                        host_parts.append((host_left, host_right))
                     else:
                         host_parts.append((host, ''))
 
