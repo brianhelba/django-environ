@@ -1027,7 +1027,7 @@ class Env:
         return config
 
     @classmethod
-    def _parse_common_search_params(cls, url):
+    def _parse_common_search_params(cls, url: ParseResult):
         cfg: Dict[str, Any] = {}
         prs: Dict[str, List[str]] = {}
 
@@ -1045,7 +1045,12 @@ class Env:
         return cfg, prs
 
     @classmethod
-    def _parse_elasticsearch_search_params(cls, url, path, secure, params):
+    def _parse_elasticsearch_search_params(
+            cls,
+            url: ParseResult,
+            path: _str,
+            secure: _bool,
+            params: Dict[_str, List[_str]]):
         cfg: Dict[str, Any] = {}
         split = path.rsplit('/', 1)
 
@@ -1067,7 +1072,9 @@ class Env:
         return cfg
 
     @classmethod
-    def _parse_solr_search_params(cls, url, path, params):
+    def _parse_solr_search_params(
+            cls, url: ParseResult, path: _str,
+            params: Dict[_str, List[_str]]):
         cfg: Dict[str, Any] = {}
         cfg['URL'] = urlunparse(('http',) + url[1:2] + (path,) + ('', '', ''))
         if 'TIMEOUT' in params:
@@ -1077,7 +1084,7 @@ class Env:
         return cfg
 
     @classmethod
-    def _parse_whoosh_search_params(cls, params):
+    def _parse_whoosh_search_params(cls, params: Dict[_str, List[_str]]):
         cfg: Dict[str, Any] = {}
         if 'STORAGE' in params:
             cfg['STORAGE'] = params['STORAGE'][0]
@@ -1086,14 +1093,16 @@ class Env:
         return cfg
 
     @classmethod
-    def _parse_xapian_search_params(cls, params):
+    def _parse_xapian_search_params(cls, params: Dict[_str, List[_str]]):
         cfg: Dict[str, Any] = {}
         if 'FLAGS' in params:
             cfg['FLAGS'] = params['FLAGS'][0]
         return cfg
 
     @classmethod
-    def search_url_config(cls, url, engine=None):
+    def search_url_config(
+            cls, url: Union[ParseResult, _str],
+            engine: Optional[_str] = None) -> Dict[_str, Any]:
         """Parse an arbitrary search URL.
 
         :param urllib.parse.ParseResult or str url:
